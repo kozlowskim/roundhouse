@@ -55,6 +55,8 @@ namespace roundhouse.databases
             get { return true; }
         }
 
+        public virtual bool run_preprocessor_on_sql { get; set; }
+
         protected IConnection<DBCONNECTION> server_connection;
         protected IConnection<DBCONNECTION> admin_connection;
 

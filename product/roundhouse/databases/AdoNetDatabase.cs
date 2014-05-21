@@ -24,6 +24,8 @@ namespace roundhouse.databases
 
         private DbProviderFactory provider_factory;
 
+        private bool runPreprocessorOnSql;
+
         private AdoNetConnection GetAdoNetConnection(string conn_string)
         {
             provider_factory = DbProviderFactories.GetFactory(provider);
@@ -55,6 +57,18 @@ namespace roundhouse.databases
                 admin_connection.Dispose();
             }
 
+        }
+
+        public override bool run_preprocessor_on_sql
+        {
+            get
+            {
+                return true;
+            }
+            set
+            {
+                this.runPreprocessorOnSql = value;
+            }
         }
 
         public override void open_connection(bool with_transaction)

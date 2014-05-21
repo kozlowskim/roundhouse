@@ -212,6 +212,13 @@ namespace roundhouse.migrators
         {
             IList<string> sql_statements = new List<string>();
 
+            if (database.run_preprocessor_on_sql)
+            {
+                // TODO - move to IoC
+                SqlCmdPreProcessor preProcessor = new SqlCmdPreProcessor();
+                sql_to_run = preProcessor.Process(sql_to_run);
+            }
+
             if (database.split_batch_statements)
             {
                 foreach (var sql_statement in StatementSplitter.split_sql_on_regex_and_remove_empty_statements(sql_to_run, database.sql_statement_separator_regex_pattern))

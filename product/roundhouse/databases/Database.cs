@@ -85,6 +85,8 @@ namespace roundhouse.databases
         bool split_batch_statements { get; set; }
         bool supports_ddl_transactions { get; }
 
+        bool run_preprocessor_on_sql { get; set; }
+
         void initialize_connections(ConfigurationPropertyHolder configuration_property_holder);
         void open_connection(bool with_transaction);
         void close_connection();

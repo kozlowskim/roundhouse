@@ -113,6 +113,12 @@ namespace roundhouse.databases
             get { return database.supports_ddl_transactions; }
         }
 
+        public bool run_preprocessor_on_sql
+        {
+            get { return database.run_preprocessor_on_sql; }
+            set { database.run_preprocessor_on_sql = value; }
+        }
+
         //public IRepository repository
         //{
         //    get { return database.repository; }

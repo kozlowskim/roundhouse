@@ -2,6 +2,9 @@ using System.IO;
 
 namespace roundhouse.tests.infrastructure.filesystem
 {
+    using System.Runtime.Serialization;
+    using System.Text;
+
     using roundhouse.infrastructure.filesystem;
     using bdddoc.core;
     using developwithpassion.bdd.contexts;
@@ -24,6 +27,7 @@ namespace roundhouse.tests.infrastructure.filesystem
             protected static string utf8_file;
             protected static string ansi_file;
 
+
             because b = () =>
             {
                 if (File.Exists(@".\infrastructure\filesystem\utf8encoded.txt"))
@@ -32,7 +36,7 @@ namespace roundhouse.tests.infrastructure.filesystem
                 }
                 else
                 {
-                    utf8_file = sut.read_file_text(@".\\build_output\RoundhousE\infrastructure\filesystem\utf8encoded.txt");
+                    utf8_file = sut.read_file_text(@".\build_output\RoundhousE\infrastructure\filesystem\utf8encoded.txt");
                 }
 
                 if (File.Exists(@".\infrastructure\filesystem\ansiencoded.txt"))
@@ -49,13 +53,13 @@ namespace roundhouse.tests.infrastructure.filesystem
             [Observation]
             public void utf8_encoded_file_should_read_correctly()
             {
-                utf8_file.should_be_equal_to("INSERT INTO [dbo].[timmy]([value]) VALUES('Gã')");
+                utf8_file.should_be_equal_to("INSERT INTO [dbo].[timmy]([value]) VALUES('GÃ£')");
             }
 
             [Observation]
             public void ansi_encoded_file_should_read_correctly()
             {
-                ansi_file.should_be_equal_to("INSERT INTO [dbo].[timmy]([value]) VALUES('Gã')");
+                ansi_file.should_be_equal_to("INSERT INTO [dbo].[timmy]([value]) VALUES('GÄƒ')");
             }
         }
     }
