@@ -134,6 +134,10 @@
 
         public bool DisableOutput { get; set; }
 
+        public string SqlCmdPath { get; set; }
+
+        public string SqlCmdEnvironment { get; set; }
+
         #endregion
 
         public void run_the_task()

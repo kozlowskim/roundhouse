@@ -300,6 +300,12 @@ namespace roundhouse.console
                 .Add("searchallinsteadoftraverse=|searchallsubdirectoriesinsteadoftraverse=",
                      "SearchAllSubdirectoriesInsteadOfTraverse - Each Migration folder's subdirectories are traversed by default. This option pulls back scripts from the main directory and all subdirectories at once. Defaults to 'false'",
                      option => configuration.SearchAllSubdirectoriesInsteadOfTraverse = option != null)
+                .Add("sqlcmdtokenspath=",
+                     "A path to sql cmd tokens",
+                     option => configuration.SqlCmdPath = option)
+                .Add("sqlcmdenv=",
+                     "The name of the environment for sql cmd deploy",
+                     option => configuration.SqlCmdEnvironment = option)
                 ;
 
             try

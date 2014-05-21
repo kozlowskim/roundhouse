@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
+    using System.Xml.Linq;
 
     public class SqlCmdPreProcessor
     {
@@ -30,6 +31,23 @@
                                                   };
 
         private Dictionary<string, string> variables = new Dictionary<string, string>();
+
+        private Dictionary<string, string> tokens;
+
+        public SqlCmdPreProcessor(string tokensPath, string environment)
+        {
+            if (string.IsNullOrEmpty(tokensPath))
+            {
+                throw new ArgumentException();
+            }
+
+            if (string.IsNullOrEmpty(environment))
+            {
+                throw new ArgumentException();
+            }
+
+            this.tokens = new Dictionary<string, string>(SqlCmdTokensParser.ParseTokens(XDocument.Load(tokensPath), environment));
+        }
 
         public string Process(string input)
         {
@@ -69,7 +87,18 @@
 
         private string EvaluateVariables(string line)
         {
-            return this.variables.Aggregate(line, (current, variable) => current.Replace(string.Format(VARIABLE_TEMPLATE, variable.Key), variable.Value));
+            string result = line;
+            foreach (KeyValuePair<string, string> variable in this.variables)
+            {
+                string variableValue = variable.Value;
+                if (this.tokens.ContainsKey(variable.Key))
+                {
+                    variableValue = tokens[variable.Key];
+                }
+                
+                result = result.Replace(string.Format(VARIABLE_TEMPLATE, variable.Key), variableValue);
+            }
+            return result;
         }
 
         private string CommentOutLine(string line)
@@ -100,6 +129,38 @@
             }
 
             return null;
+        }
+    }
+
+    public static class SqlCmdTokensParser
+    {
+        public static IDictionary<string, string> ParseTokens(XDocument sqlTokens, string environment)
+        {
+
+            IDictionary<string, string> defaults =
+                sqlTokens.Descendants("token")
+                    .Where(a => (string)a.Parent.Attribute("name") == "default")
+                    .ToDictionary(a => a.Attribute("name").Value, a => a.Attribute("value").Value);
+
+            IDictionary<string, string> enviroment =
+                sqlTokens.Descendants("token")
+                    .Where(a => (string)a.Parent.Attribute("name") == environment)
+                    .ToDictionary(a => a.Attribute("name").Value, a => a.Attribute("value").Value);
+
+            foreach (var env in enviroment)
+            {
+                string value;
+                if (!defaults.TryGetValue(env.Key, out value))
+                {
+                    defaults.Add(env);
+                }
+                else
+                {
+                    defaults[env.Key] = env.Value;
+                }
+            }
+
+            return defaults;
         }
     }
 }

@@ -214,8 +214,9 @@ namespace roundhouse.migrators
 
             if (database.run_preprocessor_on_sql)
             {
+                
                 // TODO - move to IoC
-                SqlCmdPreProcessor preProcessor = new SqlCmdPreProcessor();
+                SqlCmdPreProcessor preProcessor = new SqlCmdPreProcessor(database.configuration.SqlCmdPath, database.configuration.SqlCmdEnvironment);
                 sql_to_run = preProcessor.Process(sql_to_run);
             }
 
